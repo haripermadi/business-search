@@ -4,7 +4,8 @@ import {
   Text,
   Dimensions,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from "react-native";
 import { Rating } from "react-native-elements";
 import Carousel, { ParallaxImage } from "react-native-snap-carousel";
@@ -64,7 +65,7 @@ class DetailBusiness extends Component {
     if (Object.keys(detail).length > 0) {
       let reminderSign = detail.price ? 4 - detail.price.length : 4;
       return (
-        <View style={styles.containerMain}>
+        <ScrollView style={styles.containerMain}>
           <View>
             {this.props.entries.length > 0 ? (
               <Carousel
@@ -117,7 +118,7 @@ class DetailBusiness extends Component {
             </MapView>
             <Text>Address: {detail.location.display_address.join(",")}</Text>
           </View>
-        </View>
+        </ScrollView>
       );
     } else {
       return (

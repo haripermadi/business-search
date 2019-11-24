@@ -69,7 +69,7 @@ export default StyleSheet.create({
   containerMap: {
     height: screenWidth / 2 + Scaling.moderateScale(50),
     width: screenWidth,
-    marginTop: Scaling.moderateScale(30),
+    marginVertical: Scaling.moderateScale(30),
     paddingHorizontal: Scaling.moderateScale(10),
     justifyContent: "center"
   },

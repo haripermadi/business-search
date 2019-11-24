@@ -10,8 +10,8 @@ export default StyleSheet.create({
       Platform.OS == "ios"
         ? screenHeight >= 812
           ? Scaling.moderateScale(45)
-          : Scaling.moderateScale(5)
-        : Scaling.moderateScale(5),
+          : Scaling.moderateScale(10)
+        : Scaling.moderateScale(30),
     backgroundColor: "#74b9ff"
   },
   searchStyle: {
