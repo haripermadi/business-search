@@ -12,7 +12,7 @@ const businessReducer = (state = INITIAL_STATE, action) => {
     case FETCH_LIST:
       return { ...state, listData: [...action.payload] };
     case FETCH_DETAIL:
-      console.log("reducer detail----", action);
+      // console.log("reducer detail----", action);
       return {
         ...state,
         detail: action.detail,

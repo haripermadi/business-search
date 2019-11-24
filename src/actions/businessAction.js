@@ -18,19 +18,19 @@ export const fetchBusinessList = search => async dispatch => {
         term: search
       }
     });
-    console.log("res--action fetch---", response);
+    // console.log("res--action fetch---", response);
     dispatch({
       type: FETCH_LIST,
       payload: response.data.businesses
     });
   } catch (err) {
-    console.log("err catch---", err);
+    // console.log("err catch---", err);
     alert(err.message);
   }
 };
 
 export const fetchBusinessDetail = id => async dispatch => {
-  console.log("FETCH DETAIL ACTION----", id);
+  // console.log("FETCH DETAIL ACTION----", id);
   let url = `https://api.yelp.com/v3/businesses/${id}`;
   try {
     let response = await axios({
@@ -40,14 +40,14 @@ export const fetchBusinessDetail = id => async dispatch => {
         Authorization: API_KEY
       }
     });
-    console.log("res--action detail---", response);
+    // console.log("res--action detail---", response);
     dispatch({
       type: FETCH_DETAIL,
       detail: response.data,
       entries: response.data.photos
     });
   } catch (err) {
-    console.log("err catch---", err);
+    // console.log("err catch---", err);
     alert(err.message);
   }
 };

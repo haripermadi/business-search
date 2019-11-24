@@ -2,16 +2,17 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   Dimensions,
   Platform,
   ActivityIndicator
 } from "react-native";
-import { Rating, Icon } from "react-native-elements";
+import { Rating } from "react-native-elements";
 import Carousel, { ParallaxImage } from "react-native-snap-carousel";
-import axios from "axios";
 import { connect } from "react-redux";
+import MapView, { Marker } from "react-native-maps";
+
 import * as actions from "../../actions";
+import styles from "./styles";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -22,46 +23,29 @@ class DetailBusiness extends Component {
       headerBackTitle: "hola",
       headerStyle: {
         backgroundColor: "#74b9ff"
-      }
+      },
+      headerTintColor: "#fff"
     };
   };
 
   state = {
     detail: {},
-    entries: []
+    entries: [],
+    region: {
+      longitude: -73.9306,
+      latitude: 40.7352,
+      longitudeDelta: 0.09,
+      latitudeDelta: 0.3
+    }
   };
   componentDidMount() {
-    // console.log("id---", this.props.navigation.getParam("id"));
-    // this.getDetailData();
     let id = this.props.navigation.getParam("id");
+    // let id = "H4jJ7XB3CetIr1pg56CczQ";
     this.props.fetchBusinessDetail(id);
   }
 
-  // getDetailData = async () => {
-  //   let id = this.props.navigation.getParam("id");
-  //   // let id = "H4jJ7XB3CetIr1pg56CczQ";
-  //   let APIKEY =
-  //     "Bearer I14teEMWWpHIXE1Nd2I5FsTZ8mxh7N-ph6VI7OYvaL5G0ZqQ7MSusiLi0R1IRE0m35YhUDJ_CnLQPINO0aQSR3RupI-6FlF1BjuIAtsxzUxx5ahqs3oHpCTPNMPXXXYx";
-  //   let url = `https://api.yelp.com/v3/businesses/${id}`;
-  //   try {
-  //     let response = await axios({
-  //       method: "get",
-  //       url,
-  //       headers: {
-  //         Authorization: APIKEY
-  //       }
-  //     });
-  //     console.log("res- detail----", response);
-  //     this.setState({
-  //       detail: response.data,
-  //       entries: response.data.photos
-  //     });
-  //   } catch (err) {
-  //     console.log("err catch--detail--", err);
-  //   }
-  // };
   _renderItem({ item, index }, parallaxProps) {
-    console.log("image----", item);
+    // console.log("image----", item);
     return (
       <View style={styles.slide}>
         <ParallaxImage
@@ -74,14 +58,13 @@ class DetailBusiness extends Component {
       </View>
     );
   }
+
   render() {
-    console.log("detail props---", this.props);
     var detail = this.props.detail;
     if (Object.keys(detail).length > 0) {
-      console.log("detail > 0-----------------");
       let reminderSign = detail.price ? 4 - detail.price.length : 4;
       return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.containerMain}>
           <View>
             {this.props.entries.length > 0 ? (
               <Carousel
@@ -100,12 +83,11 @@ class DetailBusiness extends Component {
           </View>
           <View style={styles.containerDetailData}>
             <View style={styles.containerReview}>
-              <Text style={styles.textContent}>{detail.review_count}</Text>
+              <Text style={styles.textTitle}>{detail.review_count}</Text>
               <Text style={styles.textContent}>Reviews</Text>
             </View>
             <View style={{ flexDirection: "row" }}>
               <View style={styles.rating}>
-                {/* <Text style={styles.textContent}>{detail.rating}</Text> */}
                 <Rating imageSize={20} readonly startingValue={detail.rating} />
               </View>
               <View style={styles.price}>
@@ -117,6 +99,23 @@ class DetailBusiness extends Component {
                 </Text>
               </View>
             </View>
+          </View>
+          <View style={styles.containerMap}>
+            <Text style={styles.textTitleMap}>Our Location</Text>
+            <MapView
+              style={styles.mapStyle}
+              cacheEnabled={Platform.OS === "android" ? true : false}
+              initialRegion={this.state.region}
+            >
+              <Marker
+                coordinate={{
+                  latitude: detail.coordinates.latitude,
+                  longitude: detail.coordinates.longitude
+                }}
+                pinColor="red"
+              />
+            </MapView>
+            <Text>Address: {detail.location.display_address.join(",")}</Text>
           </View>
         </View>
       );
@@ -131,58 +130,6 @@ class DetailBusiness extends Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  textContent: {
-    textAlign: "center"
-  },
-  textPrice: {
-    textAlign: "center",
-    color: "green",
-    fontSize: 16,
-    fontWeight: "bold"
-  },
-  slide: {
-    width: screenWidth - 60,
-    height: screenWidth / 2 + 20
-  },
-  imageContainer: {
-    flex: 1,
-    marginBottom: Platform.select({ ios: 0, android: 1 }),
-    backgroundColor: "white",
-    borderRadius: 10
-  },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: "contain"
-  },
-  containerLoad: {
-    height: screenWidth / 2 + 20,
-    justifyContent: "center"
-  },
-  containerDetailData: {
-    borderColor: "#b2bec3",
-    borderWidth: 1,
-    marginTop: 20,
-    marginHorizontal: 20,
-    borderRadius: 5
-  },
-  containerReview: {
-    borderBottomWidth: 1,
-    borderColor: "#b2bec3",
-    padding: 10
-  },
-  rating: {
-    flex: 1,
-    borderRightWidth: 1,
-    borderColor: "#b2bec3",
-    padding: 5
-  },
-  price: {
-    flex: 1,
-    padding: 5
-  }
-});
 
 const mapStateToProps = state => {
   const { business } = state;
